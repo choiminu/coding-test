@@ -1,50 +1,48 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 class Main {
-
-    static int N,M;
-    static int[] time;
-    static Queue<Integer> queue = new LinkedList<>();
-    static int MAX = 100001;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         StringTokenizer token = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(token.nextToken());
-        M = Integer.parseInt(token.nextToken());
+        int start = Integer.parseInt(token.nextToken());
+        int end = Integer.parseInt(token.nextToken());
 
-        time = new int[MAX];
-        queue.offer(N);
-        bfs();
+        boolean[] isVisited = new boolean[100001];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{start, 0});
 
-    }
-
-
-    public static void bfs() {
         while (!queue.isEmpty()) {
-            Integer now = queue.poll();
+            int[] cur = queue.poll();
+            int loc = cur[0];
+            int dist = cur[1];
 
-            if (now == M) {
-                System.out.println(time[now]);
+            if (loc == end) {
+                bw.write(dist+"");
                 break;
             }
 
-            int[] nextPositions = {now - 1, now + 1, now * 2};
-
-            for (int next : nextPositions) {
-                if (next >= 0 && next < MAX && time[next] == 0) {
-                    queue.offer(next);
-                    time[next] = time[now] + 1;
+            int[] nextPositions = {loc - 1, loc + 1, loc * 2};
+            for (int nextPosition : nextPositions) {
+                if (nextPosition >= 0 && nextPosition <= 100000 && !isVisited[nextPosition]) {
+                    queue.offer(new int[] {nextPosition, dist + 1});
+                    isVisited[nextPosition] = true;
                 }
             }
-
         }
-    }
 
+        br.close();
+        bw.flush();
+        bw.close();
+    }
 }
+
