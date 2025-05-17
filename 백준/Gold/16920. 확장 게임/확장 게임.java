@@ -1,20 +1,30 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int row, col, P;
-    static int[] playerDistance;
-    static int[][] map;
-    static int[] result;
+    static int row;
+    static int col;
+    static int P;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static Queue<int[]>[] playerQueues;
+    static int[][] map;
+    static int[] playerDistance;
+    static int[] result;
+
+    static Queue<int[]>[] queues;
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -23,11 +33,13 @@ public class Main {
         col = Integer.parseInt(token.nextToken());
         P = Integer.parseInt(token.nextToken());
 
+        map = new int[row][col];
         playerDistance = new int[P + 1];
+        queues = new ArrayDeque[P + 1];
         result = new int[P + 1];
-        playerQueues = new ArrayDeque[P + 1];
+
         for (int i = 1; i <= P; i++) {
-            playerQueues[i] = new ArrayDeque<>();
+            queues[i] = new ArrayDeque<>();
         }
 
         token = new StringTokenizer(br.readLine());
@@ -35,65 +47,70 @@ public class Main {
             playerDistance[i] = Integer.parseInt(token.nextToken());
         }
 
-        map = new int[row][col];
         for (int y = 0; y < row; y++) {
-            char[] line = br.readLine().toCharArray();
+            char[] input = br.readLine().toCharArray();
             for (int x = 0; x < col; x++) {
-                char c = line[x];
-                if (c == '#') {
-                    map[y][x] = -1; // 벽
-                } else if (c == '.') {
-                    map[y][x] = 0; // 빈 칸
+                if (input[x] == '.') {
+                    map[y][x] = 0;
+                } else if (input[x] == '#') {
+                    map[y][x] = -1;
                 } else {
-                    int player = c - '0';
-                    map[y][x] = player;
-                    playerQueues[player].offer(new int[]{x, y});
-                    result[player]++;
+                    map[y][x] = input[x] - '0';
+                    queues[input[x] - '0'].offer(new int[] {x, y});
+                    result[input[x] - '0']++;
                 }
             }
         }
 
-        // 게임 루프
+        bfs();
+
+        for (int i = 1; i < result.length; i++) {
+            bw.write(result[i] + " ");
+        }
+
+        br.close();
+        bw.flush();
+        bw.close();
+    }
+
+    public static void bfs() {
         while (true) {
             boolean expanded = false;
-
             for (int p = 1; p <= P; p++) {
-                int move = playerDistance[p];
-                Queue<int[]> currentQueue = playerQueues[p];
-
-                for (int step = 0; step < move; step++) {
+                Queue<int[]> currentQueue = queues[p];
+                for (int step = 1; step <= playerDistance[p]; step++) {
                     int size = currentQueue.size();
-                    if (size == 0) break;
+
+                    if (size == 0) {
+                        break;
+                    }
 
                     for (int i = 0; i < size; i++) {
                         int[] cur = currentQueue.poll();
-                        int x = cur[0], y = cur[1];
+                        int cx = cur[0];
+                        int cy = cur[1];
 
                         for (int d = 0; d < 4; d++) {
-                            int nx = x + dx[d];
-                            int ny = y + dy[d];
+                            int nx = cx + dx[d];
+                            int ny = cy + dy[d];
 
                             if (nx < 0 || ny < 0 || nx >= col || ny >= row) continue;
                             if (map[ny][nx] != 0) continue;
 
-                            map[ny][nx] = p;
                             result[p]++;
+                            map[ny][nx] = p;
                             currentQueue.offer(new int[]{nx, ny});
                             expanded = true;
                         }
                     }
                 }
             }
-
-            if (!expanded) break;
+            if (!expanded) {
+                break;
+            }
         }
 
-        for (int i = 1; i <= P; i++) {
-            bw.write(result[i] + " ");
-        }
-
-        bw.flush();
-        br.close();
-        bw.close();
     }
+
+
 }
