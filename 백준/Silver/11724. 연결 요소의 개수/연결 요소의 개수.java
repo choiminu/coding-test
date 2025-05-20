@@ -55,21 +55,24 @@ public class Main {
         br.close();
         bw.flush();
         bw.close();
-
     }
 
     public static void dfs(int node) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(node);
         visited[node] = true;
 
-        for (int i = 0; i < graph.get(node).size(); i++) {
-            Integer newNode = graph.get(node).get(i);
-            if (!visited[newNode]) {
-                visited[newNode] = true;
-                dfs(newNode);
+        while (!queue.isEmpty()) {
+            Integer currentNode = queue.poll();
+
+            for (int i = 0; i < graph.get(currentNode).size(); i++) {
+                Integer nextNode = graph.get(currentNode).get(i);
+                if (!visited[nextNode]) {
+                    visited[nextNode] = true;
+                    queue.offer(nextNode);
+                }
             }
         }
-
     }
-
 
 }
