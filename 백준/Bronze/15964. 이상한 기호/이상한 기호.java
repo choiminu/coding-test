@@ -16,7 +16,7 @@ public class Main {
         int N = Integer.parseInt(token.nextToken());
         int M = Integer.parseInt(token.nextToken());
 
-        int result = (N + M) * (N - M);
+        long result = (long) (N + M) * (N - M);
 
         bw.write(result + "");
 
