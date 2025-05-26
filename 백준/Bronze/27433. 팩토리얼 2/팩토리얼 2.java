@@ -4,28 +4,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Main{
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
 
-        long result = fac(N);
+        long factorial = factorial(N);
 
-        bw.write(result+"");
+        bw.write(factorial + "");
 
         br.close();
         bw.flush();
         bw.close();
     }
 
-    public static long fac(int N) {
-        if (N <= 1) {
-            return 1;
-        }
-
-        return N * fac(N - 1);
+    public static long factorial(int n) {
+        if (n <= 1) return 1;
+        return n * factorial(n - 1);
     }
 
 }
