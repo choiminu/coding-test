@@ -11,7 +11,7 @@ public class Main {
     static int[] R;
     static boolean[] isVisited;
 
-    static LinkedHashSet<String> result = new LinkedHashSet<>();
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,9 +34,8 @@ public class Main {
 
         dfs(0);
 
-        for (String seq : result) {
-            bw.write(seq);
-        }
+        bw.write(sb.toString());
+
 
         br.close();
         bw.flush();
@@ -45,18 +44,19 @@ public class Main {
 
     public static void dfs(int depth) {
         if (depth == M) {
-            StringBuilder sb = new StringBuilder();
             for (int val : R) {
                 sb.append(val).append(" ");
             }
             sb.append("\n");
-            result.add(sb.toString());
             return;
         }
 
+        int before = 0;
+
         for (int i = 0; i < N; i++) {
-            if (!isVisited[i]) {
+            if (!isVisited[i] && before != A[i]) {
                 isVisited[i] = true;
+                before = A[i];
                 R[depth] = A[i];
                 dfs(depth + 1);
                 isVisited[i] = false;
