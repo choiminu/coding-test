@@ -1,77 +1,58 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int N,M;
-    static char[] A;
-    static char[] R;
-    static boolean[] isVisited;
-
-    static LinkedHashSet<String> result = new LinkedHashSet<>();
+    static int L, C;
+    static char[] chars;
+    static char[] password;
+    static final Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer token = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(token.nextToken());
-        M = Integer.parseInt(token.nextToken());
-        A = new char[M];
-        R = new char[N];
-        isVisited = new boolean[M];
+        L = Integer.parseInt(token.nextToken());
+        C = Integer.parseInt(token.nextToken());
+
+        chars = new char[C];
+        password = new char[L];
 
         token = new StringTokenizer(br.readLine());
-        for (int i = 0; i < M; i++) {
-            A[i] = token.nextToken().charAt(0);
+        for (int i = 0; i < C; i++) {
+            chars[i] = token.nextToken().charAt(0);
         }
 
-        Arrays.sort(A);
+        Arrays.sort(chars); // 사전순 정렬
+        dfs(0, 0, bw);
 
-        dfs(0, 0);
-
-        for (String s : result) {
-            bw.write(s + "\n");
-        }
-
-        br.close();
         bw.flush();
         br.close();
+        bw.close();
     }
 
-    public static void dfs(int start, int depth) {
-
-        if (depth == N) {
-            int vowel = 0;
-            int consonant = 0;
-            for (char c : R) {
-                if ("aeiou".contains(String.valueOf(c))) {
-                    vowel++;
-                } else {
-                    consonant++;
-                }
-            }
-
-            if (vowel >= 1 && consonant >= 2) {
-                result.add(new String(R));
+    public static void dfs(int start, int depth, BufferedWriter bw) throws IOException {
+        if (depth == L) {
+            if (isValidPassword(password)) {
+                bw.write(password);
+                bw.newLine();
             }
             return;
         }
 
-        for (int i = start; i < M; i++) {
-            if(!isVisited[i]) {
-                isVisited[i] = true;
-                R[depth] = A[i];
-                dfs(i, depth + 1);
-                isVisited[i] = false;
-            }
+        for (int i = start; i < C; i++) {
+            password[depth] = chars[i];
+            dfs(i + 1, depth + 1, bw);
         }
-
     }
 
-
-
+    public static boolean isValidPassword(char[] pw) {
+        int vowel = 0, consonant = 0;
+        for (char c : pw) {
+            if (vowels.contains(c)) vowel++;
+            else consonant++;
+        }
+        return vowel >= 1 && consonant >= 2;
+    }
 }
