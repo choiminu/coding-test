@@ -8,11 +8,11 @@ public class Main {
     static int row;
     static int col;
 
-    static int[] dx = {1, -1, 0, 0, 1, -1, 1, -1};
-    static int[] dy = {0, 0, 1, -1, -1, -1, 1, 1};
-
     static int[][] map;
-    static boolean[][] isVisited;
+    static Queue<int[]> queue = new LinkedList<>();
+
+    static int[] dx = {1, -1, 0, 0, 1, 1, -1, -1};
+    static int[] dy = {0, 0, 1, -1, -1, 1, 1, -1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,59 +22,53 @@ public class Main {
         row = Integer.parseInt(token.nextToken());
         col = Integer.parseInt(token.nextToken());
         map = new int[row][col];
-        isVisited = new boolean[row][col];
 
-        for (int i = 0; i < row; i++) {
+        for (int y = 0; y < row; y++){
             token = new StringTokenizer(br.readLine());
-            for (int j = 0; j < col; j++) {
-                map[i][j] = Integer.parseInt(token.nextToken());
+            for (int x = 0; x < col; x++) {
+                map[y][x] = Integer.parseInt(token.nextToken());
+
+                if (map[y][x] == 1) {
+                    queue.offer(new int[] {x, y, 1});
+                }
             }
         }
 
-        int result = 0;
+        bfs();
 
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                result = Math.max(result, bfs(j, i));
+        int max = 0;
+
+        for (int[] ints : map) {
+            for (int anInt : ints) {
+                max = Math.max(max, anInt);
             }
         }
 
-        System.out.println(result);
+        bw.write(max + "");
 
         br.close();
         bw.flush();
         bw.close();
     }
 
-    public static int bfs(int x, int y) {
-        Queue<int[]> queue = new LinkedList<>();
-        isVisited = new boolean[row][col];
-        queue.offer(new int[] {x, y, 0});
-        isVisited[y][x] = true;
-
+    private static void bfs() {
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
             int cx = cur[0];
             int cy = cur[1];
             int dist = cur[2];
 
-            if (map[cy][cx] == 1) {
-                return dist;
-            }
-
             for (int d = 0; d < 8; d++) {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
                 if (nx < 0 || ny < 0 || nx >= col || ny >= row) continue;
-                if (isVisited[ny][nx]) continue;
+                if (map[ny][nx] != 0) continue;
 
-                queue.offer(new int[] {nx, ny, dist + 1});
-                isVisited[ny][nx] = true;
+                queue.offer(new int[]{nx, ny, dist + 1});
+                map[ny][nx] = dist;
             }
+
         }
-
-        return -1;
-
     }
 }
