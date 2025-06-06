@@ -3,35 +3,27 @@ import java.util.Stack;
 class Solution {
     public int solution(int[][] board, int[] moves) {
         int answer = 0;
-        
-        Stack<Integer> basket = new Stack<>();
-        
-        for (int i = 0; i < moves.length; i++) {
-            int nx = moves[i] - 1;
-            int ny = 0;
-            
-            while(board[ny][nx] == 0) {
-                ny++;
-                if (ny >= board.length) {
-                    ny--;
-                    break;
-                };
-            }
-            
-            if (board[ny][nx] != 0) {
-                int doll = board[ny][nx];
-                if (!basket.isEmpty() && basket.peek() == doll) {
-                    basket.pop();
-                    answer += 2;
-                } else {
-                    basket.push(board[ny][nx]);
-                }
-                board[ny][nx] = 0;
-            }
-            
-        }
 
-        System.out.println(basket);
+        Stack<Integer> stack = new Stack<>();
+        
+        for (int move : moves) {
+            int col = move - 1;
+            
+            for (int row = 0; row < board.length; row++) {
+                int doll = board[row][col];
+                if (doll == 0) continue;
+                
+                board[row][col] = 0;
+                
+                if (!stack.isEmpty() && stack.peek() == doll) {
+                    answer += 2;
+                    stack.pop();
+                } else {
+                    stack.push(doll);
+                }
+                break;
+            }
+        }
         
         return answer;
     }
