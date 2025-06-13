@@ -2,17 +2,14 @@ import java.io.*;
 
 public class Main {
 
+    static int[] dp = new int[11];
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int T = Integer.parseInt(br.readLine());
 
-        int[] dp = new int[11];
-        dp[1] = 1;
-        dp[2] = 2;
-        dp[3] = 4;
-
-        for (int i = 4; i < 11; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        for (int i = 1; i <= 10; i++) {
+            recur(i);
         }
 
         while (T --> 0) {
@@ -20,5 +17,14 @@ public class Main {
             System.out.println(dp[n]);
         }
 
+    }
+
+    public static int recur(int n) {
+        if (n == 1) return dp[n] = 1;
+        if (n == 2) return dp[n] = 2;
+        if (n == 3) return dp[n] = 4;
+
+        if (dp[n] != 0) return dp[n];
+        return dp[n] = recur(n - 1) + recur(n - 2) + recur(n - 3);
     }
 }
