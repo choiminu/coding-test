@@ -1,26 +1,27 @@
-import java.util.LinkedList;
-import java.util.Queue;
 class Solution {
+    
+    static int result = 0;
+    
     public int solution(int[] numbers, int target) {
-            int answer = 0;
-            Queue<Integer> queue = new LinkedList<>();
-            queue.offer(0);
-
-            for (int i = 0; i < numbers.length; i++) {
-                int size = queue.size();
-
-                for (int j = 0; j < size; j++) {
-                    Integer sum = queue.poll();
-                    queue.offer(sum + numbers[i]);
-                    queue.offer(sum - numbers[i]);
-                }
-            }
+        int answer = 0;
         
-            while(!queue.isEmpty()) {
-                int num = queue.poll();
-                if (num == target) answer++;
+        dps(numbers, 0, 0, target);
+        
+        answer = result;
+        
+        return answer;
+    }
+    
+    public void dps(int[] A, int sum, int depth, int target) {
+        if (depth == A.length) {
+            if (sum == target) {
+                result++;
             }
-
-            return answer;
+            return;
+        }
+        
+        dps(A, sum + A[depth] * -1, depth + 1, target);
+        dps(A, sum + A[depth] * 1, depth + 1, target);
+        
     }
 }
