@@ -6,16 +6,18 @@ import java.io.OutputStreamWriter;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String str = br.readLine();
-        int index = Integer.parseInt(br.readLine());
+        String input = br.readLine();
+        int N = Integer.parseInt(br.readLine());
 
-        bw.write(str.charAt(index - 1));
+        bw.write(input.charAt(N - 1) + "");
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
