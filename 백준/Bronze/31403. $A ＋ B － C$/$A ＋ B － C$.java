@@ -3,25 +3,23 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
 
-class Main {
-
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int[] A = new int[3];
-        for (int i = 0; i < 3; i++) {
-            A[i] = Integer.parseInt(br.readLine());
-        }
+        int A = Integer.parseInt(br.readLine());
+        int B = Integer.parseInt(br.readLine());
+        int C = Integer.parseInt(br.readLine());
 
-        bw.write(A[0] + A[1] - A[2] + "\n");
-        bw.write(Integer.parseInt(String.valueOf(A[0]) + A[1]) - A[2] + "\n");
+        bw.write(A + B - C + "\n");
+        bw.write(Integer.parseInt("" + A + B) - C + "");
 
         br.close();
         bw.flush();
         bw.close();
-
     }
 }
 
