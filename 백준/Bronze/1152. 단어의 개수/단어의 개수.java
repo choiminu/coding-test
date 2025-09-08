@@ -3,20 +3,23 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        String[] input = br.readLine().trim().split(" ");
 
-        bw.write(token.countTokens() + "");
+        if (input.length == 1 && input[0].isEmpty()) {
+            bw.write("0");
+        } else {
+            bw.write(input.length + "");
+        }
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
