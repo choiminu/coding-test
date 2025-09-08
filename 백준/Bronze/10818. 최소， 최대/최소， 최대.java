@@ -10,30 +10,29 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-
-        int N = Integer.parseInt(br.readLine());
+        int T = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int max = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
+        int maxValue = Integer.MIN_VALUE;
+        int minValue = Integer.MAX_VALUE;
 
         while (st.hasMoreTokens()) {
-            int n = Integer.parseInt(st.nextToken());
+            int value = Integer.parseInt(st.nextToken());
 
-            if (n > max) {
-                max = n;
+            if (value > maxValue) {
+                maxValue = value;
             }
 
-            if (n < min) {
-                min = n;
+            if (value < minValue) {
+                minValue = value;
             }
-
         }
 
-        bw.write(min + " " + max);
+        bw.write(minValue + " " + maxValue);
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
