@@ -5,22 +5,23 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        while (true) {
+        for (;;) {
             StringTokenizer st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
 
-            int n1 = Integer.parseInt(st.nextToken());
-            int n2 = Integer.parseInt(st.nextToken());
-
-            if (n1 == 0 && n2 == 0) {
+            if (x == 0 && y == 0) {
                 break;
             }
 
-            bw.write(n1 + n2 + "\n");
+            bw.write(x + y + "\n");
 
         }
 
@@ -29,3 +30,4 @@ public class Main {
         bw.close();
     }
 }
+
