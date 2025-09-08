@@ -5,32 +5,26 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int score = Integer.parseInt(br.readLine());
-        char grade = '?';
+        int N = Integer.parseInt(br.readLine());
 
-        switch (score / 10) {
-            case 10:
-                grade = 'A';
-                break;
-            case 9:
-                grade = 'A';
-                break;
-            case 8:
-                grade = 'B';
-                break;
-            case 7:
-                grade = 'C';
-                break;
-            case 6:
-                grade = 'D';
-                break;
-            default:
-                grade = 'F';
+        char grade = '?';
+        if (N >= 90) {
+            grade = 'A';
+        } else if (N >= 80) {
+            grade = 'B';
+        } else if (N >= 70) {
+            grade = 'C';
+        } else if (N >= 60) {
+            grade = 'D';
+        } else {
+            grade = 'F';
         }
 
         bw.write(grade);
@@ -40,3 +34,4 @@ public class Main {
         bw.close();
     }
 }
+
