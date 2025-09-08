@@ -11,35 +11,38 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        final int MAX = 1000;
 
-        boolean[] isNotPrime = new boolean[1000 + 1];
-        isNotPrime[0] = isNotPrime[1] = true;
+        boolean[] isPrime = new boolean[MAX + 1];
+        Arrays.fill(isPrime, true);
+        isPrime[0] = isPrime[1] = false;
 
-        for (int i = 2; i <= Math.sqrt(1000); i++) {
-            if (isNotPrime[i]) {
+        for (int i = 2; i < isPrime.length; i++) {
+
+            if (!isPrime[i]) {
                 continue;
             }
 
-            for (int j = i + i; j <= 1000; j += i) {
-                isNotPrime[j] = true;
+            for (int j = i + i; j < isPrime.length; j += i) {
+                isPrime[j] = false;
             }
+
         }
+
+        int T = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
         int result = 0;
-        while (token.hasMoreElements()) {
-            int num = Integer.parseInt(token.nextToken());
-
-            if (!isNotPrime[num]) {
-                result++;
-            }
+        while (st.hasMoreTokens()) {
+            int value = Integer.parseInt(st.nextToken());
+            if (isPrime[value]) result++;
         }
 
-        bw.write(result+"");
+        bw.write(result +"");
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
