@@ -10,22 +10,23 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int max = Integer.MIN_VALUE;
-        int index = -1;
+        int maxValue = Integer.MIN_VALUE;
+        int maxIndex = -1;
 
-        for (int i = 1; i <= 9; i++) {
-            int N = Integer.parseInt(br.readLine());
+        for (int i = 0; i < 9; i++) {
+            int value = Integer.parseInt(br.readLine());
 
-            if (N > max) {
-                max = N;
-                index = i;
+            if (value > maxValue) {
+                maxValue = value;
+                maxIndex = i + 1;
             }
         }
 
-        bw.write(max + "\n" + index);
+        bw.write(maxValue + "\n" + maxIndex);
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
