@@ -11,24 +11,27 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int[] alphabet = new int[26];
-
-        Arrays.fill(alphabet, -1);
+        int[] index = new int[26];
+        Arrays.fill(index, -1);
 
         char[] input = br.readLine().toCharArray();
-
         for (int i = 0; i < input.length; i++) {
-            if (alphabet[input[i] - 'a'] == -1) {
-                alphabet[input[i] - 'a'] = i;
+            int idx = input[i] - 'a';
+            if (index[idx] == -1) {
+                index[idx] = i;
             }
         }
 
-        for (int i : alphabet) {
-            bw.write(i + " ");
+        StringBuilder sb = new StringBuilder();
+        for (int i : index) {
+            sb.append(i).append(" ");
         }
+
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
