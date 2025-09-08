@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+
 public class Main {
     public static void main(String[] args) throws IOException {
 
@@ -12,14 +13,13 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
+        double x = Double.parseDouble(st.nextToken());
+        double y = Double.parseDouble(st.nextToken());
 
-        int a = Integer.parseInt(st.nextToken());
-        int b = Integer.parseInt(st.nextToken());
-
-        bw.write(((double)a/b) + "");
-
+        bw.write(x / y + "");
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
