@@ -10,13 +10,16 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int range = Integer.parseInt(br.readLine());
-
-        char[] nums = br.readLine().toCharArray();
+        int N = Integer.parseInt(br.readLine());
+        String input = br.readLine();
 
         int sum = 0;
-        for (char ch : nums) {
-            sum += ch - '0';
+        for (int i = 0; i < N; i++) {
+            int temp = input.charAt(i) - '0';
+
+            if (temp == 0) continue;
+
+            sum += temp;
         }
 
         bw.write(sum + "");
@@ -26,3 +29,4 @@ public class Main {
         bw.close();
     }
 }
+
