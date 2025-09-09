@@ -1,31 +1,35 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
-class Main {
+public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         while (true) {
-            String input = br.readLine();
+            char[] input = br.readLine().toCharArray();
+            String result = "yes";
 
-            if (input.length() == 1 && input.charAt(0) == '0') {
+            if (input.length == 1 && input[0] == '0') {
                 break;
             }
 
-            boolean flag = true;
-            for (int i = 0; i < input.length() / 2; i++) {
-                if (input.charAt(i) != input.charAt(input.length() - 1 - i)) {
-                    flag = false;
+            for (int i = 0; i < input.length / 2; i++) {
+                if (input[i] != input[input.length - 1 - i]) {
+                    result = "no";
                     break;
                 }
             }
 
-            if (flag) {
-                System.out.println("yes");
-            } else {
-                System.out.println("no");
-            }
+            bw.write(result + "\n");
         }
+
+        br.close();
+        bw.flush();
+        bw.close();
     }
 }
