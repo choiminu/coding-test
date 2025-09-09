@@ -3,40 +3,38 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
+
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int n = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int[] arr = new int[n];
+        int[] scores = new int[N];
+        int maxScore = Integer.MIN_VALUE;
+        for (int i = 0; i < N; i++) {
+            scores[i] = Integer.parseInt(st.nextToken());
 
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < arr.length; i++) {
-            int num = Integer.parseInt(st.nextToken());
-
-            arr[i] = num;
-
-            if (num > max) {
-                max = num;
+            if (scores[i] > maxScore) {
+                maxScore = scores[i];
             }
         }
 
         double result = 0.0;
-        for (int i = 0; i < arr.length; i++) {
-            result += (double) arr[i] / max * 100;
+        for (int score : scores) {
+            result += (double) score / maxScore * 100;
         }
 
-        bw.write(result / arr.length + "");
+        bw.write(result / N + "");
 
         br.close();
         bw.flush();
         bw.close();
     }
 }
+
