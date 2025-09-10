@@ -8,7 +8,7 @@ public class Main {
  
 		int up = in.nextInt();	
 		int down = in.nextInt();
-		int length = in.nextInt(); 
+		int length = in.nextInt();
  
 		int day = (length - down) / (up - down);
         
