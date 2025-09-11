@@ -13,23 +13,28 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
 
-        Object[][] arr = new Object[N][2];
-
-        for (int i = 0; i < arr.length; i++) {
+        int[][] members = new int[N][2];
+        String[] names = new String[N];
+        for (int i = 0; i < members.length; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            arr[i][0] = Integer.parseInt(st.nextToken());
-            arr[i][1] = st.nextToken();
+            members[i][0] = Integer.parseInt(st.nextToken());
+            members[i][1] = i;
+            names[i] = st.nextToken();
         }
 
-        Arrays.sort(arr, (a,b) -> {
-            if (a[0] == b[0]) return 0;
-            return Integer.compare(Integer.parseInt(String.valueOf(a[0])), Integer.parseInt(String.valueOf((b[0]))));
+        Arrays.sort(members,(m1, m2) -> {
+            if (m1[0] == m2[0]) {
+                return Integer.compare(m1[1], m2[1]);
+            }
+            return Integer.compare(m1[0], m2[0]);
         });
 
-        for (int i = 0; i < arr.length; i++) {
-            bw.write(arr[i][0] + " " + arr[i][1] + "\n");
+        StringBuilder sb = new StringBuilder();
+        for (int[] member : members) {
+            sb.append(member[0]).append(" ").append(names[member[1]]).append("\n");
         }
 
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
@@ -37,3 +42,4 @@ public class Main {
     }
 
 }
+
