@@ -1,40 +1,42 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
 
         int[][] arr = new int[N][2];
-
         for (int i = 0; i < N; i++) {
-            StringTokenizer token = new StringTokenizer(br.readLine());
-            arr[i][0] = Integer.parseInt(token.nextToken());
-            arr[i][1] = Integer.parseInt(token.nextToken());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int weight  = Integer.parseInt(st.nextToken());
+            int height  = Integer.parseInt(st.nextToken());
+            arr[i][0] = weight;
+            arr[i][1] = height;
         }
 
-        int[] result = new int[N];
-
-        for (int i = 0; i < N; i++) {
-            int rank = 1;
-            for (int j = 0; j < N; j++) {
-                if (i == j) continue;
-                if (arr[i][0] < arr[j][0] && arr[i][1] < arr[j][1]) {
-                    rank++;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            int lank = 1;
+            for (int j = 0; j < arr.length; j++) {
+                if (i != j &&arr[i][0] < arr[j][0] && arr[i][1] < arr[j][1]) {
+                    lank++;
                 }
             }
-            result[i] = rank;
+            sb.append(lank).append(" ");
         }
 
-        for (int rank : result) {
-            System.out.print(rank + " ");
-        }
+        bw.write(sb.toString());
 
+        br.close();
+        bw.flush();
+        bw.close();
     }
 
 }
