@@ -1,22 +1,28 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
- 
+import java.io.OutputStreamWriter;
+
 public class Main {
- 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        int n = Integer.parseInt(br.readLine());
-        int count = 0;
-        
-        while(n >= 5) {
-            count += n/5;
-            n /= 5;
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int N = Integer.parseInt(br.readLine());
+
+        int cnt = 0;
+        while (N >= 5) {
+            cnt += N /5;
+            N /= 5;
         }
-        
-        System.out.println(count);
+
+        System.out.println(cnt);
+
         br.close();
+        bw.flush();
+        bw.close();
     }
- 
+
 }
+
