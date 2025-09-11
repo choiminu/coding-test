@@ -3,8 +3,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -14,28 +12,30 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         int[] arr = new int[N];
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(br.readLine());
         }
 
         for (int i = 1; i < arr.length; i++) {
-
-            int key = arr[i];
-            int j = i - 1;
-
-            for (; j >= 0 && arr[j] > key; j--) {
-                arr[j + 1] = arr[j];
+            for (int j = 0; j < arr.length - i; j++) {
+                if (arr[j] > arr[j+1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
             }
-
-            arr[j+1] = key;
         }
 
-        bw.write(Arrays.stream(arr).mapToObj(String::valueOf).collect(Collectors.joining("\n")));
+        StringBuilder sb = new StringBuilder();
+        for (int i : arr) {
+            sb.append(i).append("\n");
+        }
+
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
         bw.close();
     }
-
-
 }
+
