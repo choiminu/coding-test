@@ -1,9 +1,9 @@
-SELECT 
+SELECT
     ANIMAL_TYPE,
-    COUNT(*) count
+    COUNT(*) AS count
 FROM
     ANIMAL_INS
 GROUP BY
     ANIMAL_TYPE
 ORDER BY
-    1
+    ANIMAL_TYPE = 'Cat' DESC;
