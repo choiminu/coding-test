@@ -3,37 +3,44 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Stack;
+import java.util.function.Function;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int T = Integer.parseInt(br.readLine());
+        Function<String, String> isVPS = str -> {
+            Stack<Character> stack = new Stack<>();
 
-        while (T --> 0) {
-            String input = br.readLine();
-            int cnt = 0;
-
-            for (char ch : input.toCharArray()) {
+            for (char ch : str.toCharArray()) {
                 if (ch == '(') {
-                    cnt++;
+                    stack.push(ch);
                 } else {
-                    if (cnt <= 0) {
-                        cnt = -99;
+
+                    if (stack.isEmpty()) {
+                        return "NO\n";
                     }
-                    cnt--;
+
+                    if (stack.peek() == '(') {
+                        stack.pop();
+                    }
                 }
             }
 
-            if (cnt == 0) {
-                bw.write("YES\n");
-            }else {
-                bw.write("NO\n");
-            }
+            return stack.isEmpty() ? "YES\n" : "NO\n";
+        };
 
+        StringBuilder sb = new StringBuilder();
+
+        int N = Integer.parseInt(br.readLine());
+        while (N --> 0) {
+            String input = br.readLine();
+            sb.append(isVPS.apply(input));
         }
 
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
@@ -41,3 +48,4 @@ public class Main {
     }
 
 }
+
