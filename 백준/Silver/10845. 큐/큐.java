@@ -3,34 +3,48 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.function.IntSupplier;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringBuilder sb = new StringBuilder();
+        Deque<Integer> q = new LinkedList<>();
 
-        Queue queue = new Queue();
-        int T = Integer.parseInt(br.readLine());
-        while (T --> 0) {
-            String[] ins = br.readLine().split(" ");
-            if (ins[0].equals("push")) {
-                queue.push(Integer.parseInt(ins[1]));
-            } else if (ins[0].equals("pop")) {
-                sb.append(queue.pop()).append("\n");
-            } else if (ins[0].equals("size")) {
-                sb.append(queue.size()).append("\n");
-            } else if (ins[0].equals("empty")) {
-                sb.append(queue.empty()).append("\n");
-            } else if (ins[0].equals("front")) {
-                sb.append(queue.front()).append("\n");
+        IntSupplier pop = () -> q.isEmpty() ? -1 : q.poll();
+        IntSupplier size = () -> q.size();
+        IntSupplier empty = () -> q.isEmpty() ? 1 : 0;
+        IntSupplier front = () -> q.isEmpty() ? -1 : q.peek();
+        IntSupplier back = () -> q.isEmpty() ? -1 : q.peekLast();
+
+        Map<String, IntSupplier> cmd = new HashMap<>();
+        cmd.put("pop", pop);
+        cmd.put("size", size);
+        cmd.put("empty", empty);
+        cmd.put("front", front);
+        cmd.put("back", back);
+
+        StringBuilder sb = new StringBuilder();
+        int N = Integer.parseInt(br.readLine());
+        for (int i = 0; i < N; i++) {
+            String line = br.readLine();
+
+            if (line.startsWith("push")) {
+                String[] temp = line.split(" ");
+                q.add(Integer.parseInt(temp[1]));
             } else {
-                sb.append(queue.back()).append("\n");
+                IntSupplier supplier = cmd.get(line);
+                sb.append(supplier.getAsInt()).append("\n");
             }
         }
 
-        System.out.print(sb.toString());
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
@@ -39,48 +53,3 @@ public class Main {
 
 }
 
-class Queue {
-    private int[] arr;
-    private int front;
-    private int rear;
-
-    public Queue() {
-        this.arr = new int[100001];
-        this.front = 0;
-        this.rear = 0;
-    }
-
-    public void push(int value) {
-        arr[rear++] = value;
-    }
-
-    public int pop() {
-        if (empty() == 1) {
-            return -1;
-        }
-        return arr[front++];
-    }
-
-    public int size() {
-        return rear - front;
-    }
-
-    public int empty() {
-        return size() == 0 ? 1 : 0;
-    }
-
-    public int front() {
-        if (empty() == 1) {
-            return -1;
-        }
-        return arr[front];
-    }
-
-    public int back() {
-        if (empty() == 1) {
-            return -1;
-        }
-        return arr[rear - 1];
-    }
-
-}
