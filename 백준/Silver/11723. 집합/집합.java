@@ -1,62 +1,94 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-class Main {
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        StringBuilder sb = new StringBuilder();
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        Consumer<Integer> add = (key) -> {
+            if (!map.containsKey(key)) {
+                map.put(key, key);
+            }
+        };
+
+        Consumer<Integer> remove = (key) -> {
+            map.remove(key);
+        };
+
+        Consumer<Integer> check = (key) -> {
+            sb.append(map.containsKey(key) ? "1" : 0).append("\n");
+        };
+
+        Consumer<Integer> toggle = (key) -> {
+            if (map.containsKey(key)) {
+                map.remove(key);
+            } else {
+                map.put(key, key);
+            }
+        };
+
+        Runnable all = () -> {
+            for (int i = 1; i <= 20; i++) {
+                map.put(i, i);
+            }
+        };
+
+        Runnable empty = () -> {
+            for (int i = 1; i <= 20; i++) {
+                map.remove(i);
+            }
+        };
+
         int N = Integer.parseInt(br.readLine());
-        MySet set = new MySet();
 
-        for (int i = 0; i < N; i++) {
-            String[] cmd = br.readLine().split(" ");
-            String op = cmd[0];
+        while (N --> 0) {
+            String[] input = br.readLine().split(" ");
 
-            if (op.equals("add")) {
-                set.add(Integer.parseInt(cmd[1]));
-            } else if (op.equals("remove")) {
-                set.remove(Integer.parseInt(cmd[1]));
-            } else if (op.equals("check")) {
-                bw.write(set.check(Integer.parseInt(cmd[1])) + "\n");
-            } else if (op.equals("toggle")) {
-                set.toggle(Integer.parseInt(cmd[1]));
-            } else if (op.equals("all")) {
-                set.all();
-            } else if (op.equals("empty")) {
-                set.empty();
+            switch (input[0]) {
+                case "add":
+                    add.accept(Integer.parseInt(input[1]));
+                    break;
+                case "remove":
+                    remove.accept(Integer.parseInt(input[1]));
+                    break;
+                case "check":
+                    check.accept(Integer.parseInt(input[1]));
+                    break;
+                case "toggle":
+                    toggle.accept(Integer.parseInt(input[1]));
+                    break;
+                case "all":
+                    all.run();
+                    break;
+                case "empty":
+                    empty.run();
+                    break;
             }
         }
 
+        bw.write(sb.toString());
+
+        br.close();
         bw.flush();
         bw.close();
     }
 
-    static class MySet {
-        boolean[] data = new boolean[21];
-
-        void add(int x) {
-            data[x] = true;
-        }
-
-        void remove(int x) {
-            data[x] = false;
-        }
-
-        int check(int x) {
-            return data[x] ? 1 : 0;
-        }
-
-        void toggle(int x) {
-            data[x] = !data[x];
-        }
-
-        void all() {
-            Arrays.fill(data, true);
-        }
-
-        void empty() {
-            Arrays.fill(data, false);
-        }
-    }
 }
+
