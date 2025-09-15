@@ -3,40 +3,44 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        int N = Integer.parseInt(br.readLine());
         StringBuilder sb = new StringBuilder();
-        
-        int T = Integer.parseInt(br.readLine());
-
         Stack<Integer> stack = new Stack<>();
-        int idx = 1;
 
-        while (T --> 0) {
-            int target = Integer.parseInt(br.readLine());
+        int next = 1;
+        for (int i = 0; i < N; i++) {
+            int num = Integer.parseInt(br.readLine());
 
-
-            while (idx <= target) {
-                stack.push(idx++);
-                sb.append("+\n");
-            }
-
-            if (stack.peek() == target) {
-                stack.pop();
-                sb.append("-\n");
-            } else {
-                sb = new StringBuilder();
-                sb.append("NO\n");
+            if (!stack.isEmpty() && stack.peek() > num) {
+                sb = new StringBuilder("NO");
                 break;
             }
+
+            while (next <= num) {
+                stack.push(next++);
+                sb.append("+").append("\n");
+            }
+
+            stack.pop();
+            sb.append("-").append("\n");
         }
 
+        bw.write(sb.toString());
+
         br.close();
-        System.out.println(sb.toString());
+        bw.flush();
+        bw.close();
     }
 
 }
+
