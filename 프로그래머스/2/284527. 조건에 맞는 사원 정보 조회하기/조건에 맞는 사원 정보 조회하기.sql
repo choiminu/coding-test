@@ -1,21 +1,22 @@
 SELECT
-    B.S AS SCORE,
-    A.EMP_NO,
-    A.EMP_NAME,
-    A.POSITION,
-    A.EMAIL
+    SCORE,
+    E.EMP_NO,
+    EMP_NAME,
+    POSITION,
+    EMAIL
 FROM
-    HR_EMPLOYEES A INNER JOIN (
-        SELECT 
-            EMP_NO,
-            SUM(SCORE) AS S
-        FROM
-            HR_GRADE
-        GROUP BY
-            EMP_NO
-        ORDER BY
-            S DESC
-        LIMIT 1
-        ) B
-ON
-    A.EMP_NO = B.EMP_NO;
+    HR_EMPLOYEES E
+JOIN (
+    SELECT 
+        EMP_NO,
+        SUM(SCORE) AS SCORE
+    FROM
+        HR_GRADE
+    WHERE
+        YEAR = 2022
+    GROUP BY
+        EMP_NO
+    ORDER BY
+        SUM(SCORE) DESC
+    LIMIT 1
+) G ON G.EMP_NO = E.EMP_NO
