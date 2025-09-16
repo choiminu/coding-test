@@ -3,43 +3,50 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
-
-        int N = Integer.parseInt(token.nextToken());
-        int M = Integer.parseInt(token.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
         int[] coins = new int[N];
-        for (int i = 0; i < coins.length; i++) {
+        for (int i = 0; i < N; i++) {
             coins[i] = Integer.parseInt(br.readLine());
         }
 
-        int result = 0;
-        for (int i = coins.length - 1; i >= 0; i--) {
+        int count = 0;
 
-            if (M == 0) {
-                break;
-            }
+        for (int i = 0; i < coins.length; i++) {
+            int coin = coins[coins.length - i - 1];
 
-            if (M / coins[i] > 0) {
-                result += M / coins[i];
-                M = M % coins[i];
-            }
+            if (K == 0) break;
+            if (K < coin) continue;
+
+            count += K / coin;
+            K %= coin;
+
         }
 
-        bw.write(result+"");
+        sb.append(count);
+
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
         bw.close();
-
     }
+
 }
 
