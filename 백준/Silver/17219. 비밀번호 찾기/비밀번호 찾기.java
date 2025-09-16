@@ -8,36 +8,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer token = new StringTokenizer(br.readLine());
-
         int N = Integer.parseInt(token.nextToken());
         int M = Integer.parseInt(token.nextToken());
 
-        Map<String, String> pwList = new HashMap<>();
-        for (int i = 0; i < N; i++) {
-            String[] siteMap = br.readLine().split(" ");
+        StringBuilder sb = new StringBuilder();
 
-            String site = siteMap[0];
-            String password = siteMap[1];
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < N + M; i++) {
 
-            pwList.put(site, password);
+            token = new StringTokenizer(br.readLine());
+
+            if (i < N) map.put(token.nextToken(), token.nextToken());
+            if (i >= N) sb.append(map.get(token.nextToken())).append("\n");
         }
 
-        for (int i = 0; i < M; i++) {
-            String site = br.readLine();
-            bw.write(pwList.get(site)+"\n");
-        }
+        bw.write(sb.toString());
 
         br.close();
         bw.flush();
         bw.close();
-
     }
+
 }
 
