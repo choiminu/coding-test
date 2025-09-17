@@ -3,80 +3,81 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static int row;
-    static int col;
-
+    static int ROW,COL;
     static int[][] map;
     static boolean[][] isVisited;
 
-    static int[] dx = {-1, 1, 0, 0};
+    static int[] dx = {-1, 1, 0,0};
     static int[] dy = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
-        row = Integer.parseInt(token.nextToken());
-        col = Integer.parseInt(token.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        ROW = Integer.parseInt(st.nextToken());
+        COL = Integer.parseInt(st.nextToken());
 
-        map = new int[row][col];
-        isVisited = new boolean[row][col];
+        map = new int[ROW][COL];
+        isVisited = new boolean[ROW][COL];
 
-        for (int y = 0; y < row; y++) {
-            token = new StringTokenizer(br.readLine());
-            for (int x = 0; x < col; x++) {
-                map[y][x] = Integer.parseInt(token.nextToken());
+        for (int i = 0; i < ROW; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < COL; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        int max = 0;
-        int total = 0;
-        for (int y = 0; y < row; y++) {
-            for (int x = 0; x < col; x++) {
+        int maxArea = 0;
+        int count = 0;
+
+        for (int y = 0; y < ROW; y++) {
+            for (int x = 0; x < COL; x++) {
                 if (map[y][x] == 1 && !isVisited[y][x]) {
-                    int count = dfs(x, y);
-                    max = Math.max(max, count);
-                    total++;
+                    maxArea = Math.max(maxArea, bfs(x, y));
+                    count++;
                 }
             }
         }
 
-        bw.write(total + "\n" + max);
+        System.out.println(count + "\n" + maxArea);
 
         br.close();
         bw.flush();
         bw.close();
     }
 
-    static public int dfs(int x, int y) {
+    public static int bfs(int x, int y) {
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[] {x, y});
         isVisited[y][x] = true;
-        int cnt = 1;
 
-        for (int d = 0; d < 4; d++) {
-            int nx = x + dx[d];
-            int ny = y + dy[d];
+        int count = 1;
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int cx = cur[0];
+            int cy = cur[1];
 
-            if (nx < 0 || ny < 0 || nx >= col || ny >= row) {
-                continue;
+            for (int d = 0; d < 4; d++) {
+                int nx = cx + dx[d];
+                int ny = cy + dy[d];
+
+                if (nx < 0 || ny < 0 || nx >= COL || ny >= ROW) continue;
+                if (map[ny][nx] != 1 || isVisited[ny][nx]) continue;
+
+                isVisited[ny][nx] = true;
+                q.offer(new int[]{nx, ny});
+                count++;
             }
-            if (map[ny][nx] == 0 || isVisited[ny][nx]) {
-                continue;
-            }
-
-            isVisited[ny][nx] = true;
-            cnt += dfs(nx, ny);
         }
 
-        return cnt;
+        return count;
     }
 }
 
