@@ -37,7 +37,8 @@ public class Main {
             graph.get(v).add(u);
         }
 
-        System.out.println(bfs(1));
+//        System.out.println(bfs(1));
+        System.out.println(dfs(1, 0));
 
         br.close();
         bw.flush();
@@ -61,6 +62,17 @@ public class Main {
         }
 
         return cnt;
+    }
+
+    public static int dfs(int start, int count) {
+        isVisited[start] = true;
+
+        for (Integer next : graph.get(start)) {
+            if(isVisited[next]) continue;
+            count = dfs(next, count + 1);
+        }
+
+        return count;
     }
 
 
