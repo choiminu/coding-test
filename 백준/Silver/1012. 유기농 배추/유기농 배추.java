@@ -1,72 +1,72 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import javax.swing.plaf.IconUIResource;
 
-class Main {
+public class Main {
 
-    static int low;
-    static int col;
-    static int kimchi;
-
+    static int COL, ROW;
     static int[][] map;
     static boolean[][] isVisited;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static Queue<int[]> queue = new LinkedList<>();
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
 
-        int TC = Integer.parseInt(br.readLine());
+        // 사용자에게 테스트 케이스의 개수를 입력받는다.
+        int T = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < TC; i++) {
+        while (T --> 0) {
 
-            StringTokenizer token = new StringTokenizer(br.readLine());
+            // 사용자에게 배추밭의 크기와 배추의 개수를 입력받는다.
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            COL = Integer.parseInt(st.nextToken());
+            ROW = Integer.parseInt(st.nextToken());
+            int seed = Integer.parseInt(st.nextToken());
 
-            col = Integer.parseInt(token.nextToken());
-            low = Integer.parseInt(token.nextToken());
-            kimchi = Integer.parseInt(token.nextToken());
+            // 입력받은 크기를 바탕으로 맵과 방문여부 배열을 초기화
+            map = new int[ROW][COL];
+            isVisited = new boolean[ROW][COL];
 
-            map = new int[low][col];
-            isVisited = new boolean[low][col];
-
-            for (int j = 0; j < kimchi; j++) {
-                token = new StringTokenizer(br.readLine());
-
-                int x = Integer.parseInt(token.nextToken());
-                int y = Integer.parseInt(token.nextToken());
-
+            // 사용자에게 배추의 위치를 입력받고 map에 반영
+            for (int i = 0; i < seed; i++) {
+                st = new StringTokenizer(br.readLine());
+                int x = Integer.parseInt(st.nextToken());
+                int y = Integer.parseInt(st.nextToken());
                 map[y][x] = 1;
             }
 
-
-            int count = 0;
-            for (int j = 0; j < low; j++) {
-                for (int k = 0; k < col; k++) {
-                    if (map[j][k] == 1 && !isVisited[j][k]) {
-                        bfs(j, k);
-                        count++;
+            int result = 0;
+            for (int y = 0; y < ROW; y++) {
+                for (int x = 0; x < COL; x++) {
+                    if (map[y][x] == 1 && !isVisited[y][x]) {
+                        result++;
+                        bfs(x,y);
                     }
                 }
             }
 
-            System.out.println(count);
+            System.out.println(result);
+
         }
 
+        br.close();
+        bw.flush();
+        bw.close();
     }
 
-    private static void bfs(int x, int y) {
-
+    public static void bfs(int x, int y) {
+        Queue<int[]> queue = new LinkedList<>();
         queue.offer(new int[]{x, y});
-        isVisited[x][y] = true;
+        isVisited[y][x] = true;
 
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
@@ -77,15 +77,13 @@ class Main {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < low && ny < col) {
-                    if (map[nx][ny] == 1 && !isVisited[nx][ny]) {
-                        queue.offer(new int[]{nx, ny});
-                        isVisited[nx][ny] = true;
-                    }
-                }
+                if (nx < 0 || ny < 0 || nx >= COL || ny >= ROW) continue;
+                if (map[ny][nx] != 1 || isVisited[ny][nx]) continue;
+
+                isVisited[ny][nx] = true;
+                queue.offer(new int[]{nx, ny});
             }
         }
     }
-
-
 }
+
