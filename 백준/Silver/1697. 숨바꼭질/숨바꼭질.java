@@ -7,42 +7,66 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
+
+    static int N, K;
+    static boolean[] isVisited;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int start = Integer.parseInt(token.nextToken());
-        int end = Integer.parseInt(token.nextToken());
+        // 수빈이의 현재 위치
+        N = Integer.parseInt(st.nextToken());
 
-        boolean[] isVisited = new boolean[100001];
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{start, 0});
+        // 동생의 현재 위치
+        K = Integer.parseInt(st.nextToken());
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int loc = cur[0];
-            int dist = cur[1];
-
-            if (loc == end) {
-                bw.write(dist+"");
-                break;
-            }
-
-            int[] nextPositions = {loc - 1, loc + 1, loc * 2};
-            for (int nextPosition : nextPositions) {
-                if (nextPosition >= 0 && nextPosition <= 100000 && !isVisited[nextPosition]) {
-                    queue.offer(new int[] {nextPosition, dist + 1});
-                    isVisited[nextPosition] = true;
-                }
-            }
+        if (N == K) {
+            System.out.println(0);
+            return;
         }
+
+        // 방문 가능한 위치는 동생의 현재 위치에서 + 1 더한 값이다.
+        isVisited = new boolean[100001];
+
+        int bfs = bfs(N);
+
+        System.out.println(bfs);
 
         br.close();
         bw.flush();
         bw.close();
     }
+
+    public static int bfs(int start) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{start, 0}); // X 좌표와 이동한 시간 저장
+        isVisited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int cx = cur[0];
+            int time = cur[1];
+
+            if (cx == K) {
+                return time;
+            }
+
+            int[] nextPosition = {cx - 1, cx + 1, cx * 2};
+            for (int nx : nextPosition) {
+                if (nx < 0 || nx > 100000 || isVisited[nx]) {
+                    continue;
+                }
+                isVisited[nx] = true;
+                queue.offer(new int[]{nx, time + 1});
+            }
+        }
+        return -1;
+    }
+
+
 }
 
