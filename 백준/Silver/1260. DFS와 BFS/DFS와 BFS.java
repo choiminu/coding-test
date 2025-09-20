@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +15,9 @@ import java.util.StringTokenizer;
 public class Main {
 
     static List<List<Integer>> graph = new ArrayList<>();
-    static StringBuilder dfsResult = new StringBuilder();
-    static StringBuilder bfsResult = new StringBuilder();
-    static boolean[] visited;
+    static boolean[] isVisited;
+    static StringBuilder bfs = new StringBuilder();
+    static StringBuilder dfs = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -44,51 +46,50 @@ public class Main {
             Collections.sort(graph.get(i));
         }
 
-        visited = new boolean[N + 1];
+        isVisited = new boolean[N + 1];
         dfs(V);
 
-        visited = new boolean[N + 1];
+        isVisited = new boolean[N + 1];
         bfs(V);
 
-        System.out.println(dfsResult);
-        System.out.println(bfsResult);
+        System.out.println(dfs.toString());
+        System.out.println(bfs.toString());
 
         br.close();
         bw.flush();
         bw.close();
     }
 
-    public static void dfs(int node) {
-        visited[node] = true;
-        dfsResult.append(node).append(" ");
-
-        for (int nextNode : graph.get(node)) {
-            if(!visited[nextNode]) {
-                dfs((nextNode));
-            }
-        }
-    }
-
     public static void bfs(int start) {
         Queue<Integer> queue = new LinkedList<>();
-        visited[start] = true;
         queue.offer(start);
+        isVisited[start] = true;
 
         while (!queue.isEmpty()) {
-            int node = queue.poll();
-            bfsResult.append(node).append(" ");
+            Integer node = queue.poll();
+            bfs.append(node).append(" ");
 
-            for (int nextNode : graph.get(node)) {
-                if (!visited[nextNode]) {
-                    visited[nextNode] = true;
-                    queue.offer(nextNode);
+            for (int next : graph.get(node)) {
+                if (!isVisited[next]) {
+                    isVisited[next] = true;
+                    queue.offer(next);
                 }
             }
-
         }
-
     }
 
-}
+    public static void dfs(int node) {
+        isVisited[node] = true;
+        dfs.append(node).append(" ");
 
+        for (int next : graph.get(node)) {
+            if (!isVisited[next]) {
+                isVisited[next] = true;
+                dfs(next);
+            }
+        }
+    }
+
+
+}
 
