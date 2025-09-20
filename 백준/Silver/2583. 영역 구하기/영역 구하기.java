@@ -1,78 +1,75 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
-class Main {
+public class Main {
 
-    static int X;
-    static int Y;
-    static int TEST_CASE;
+    static int ROW, COL;
+    static int[][] map;
+    static boolean[][] isVisited;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static int[][] paper;
-    static boolean[][] isVisited;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        ROW = Integer.parseInt(st.nextToken());
+        COL = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
 
-        Y = Integer.parseInt(token.nextToken());
-        X = Integer.parseInt(token.nextToken());
-        TEST_CASE = Integer.parseInt(token.nextToken());
+        map = new int[ROW][COL];
+        isVisited = new boolean[ROW][COL];
 
-        paper = new int[Y][X];
-        isVisited = new boolean[Y][X];
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken());
+            int y1 = Integer.parseInt(st.nextToken());
+            int x2 = Integer.parseInt(st.nextToken());
+            int y2 = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < TEST_CASE; i++) {
-            token = new StringTokenizer(br.readLine());
-
-            int startX = Integer.parseInt(token.nextToken());
-            int startY = Integer.parseInt(token.nextToken());
-
-            int endX = Integer.parseInt(token.nextToken());
-            int endY = Integer.parseInt(token.nextToken());
-
-            for (int y = startY; y < endY; y++) {
-                for (int x = startX; x < endX; x++) {
-                    paper[y][x] = 1;
+            for (int y = y1; y < y2; y++) {
+                for (int x = x1; x < x2; x++) {
+                    map[y][x] = 1;
                 }
             }
         }
 
         int count = 0;
-        List<Integer> result = new ArrayList<>();
+        List<Integer> sizes = new ArrayList<>();
 
-        for (int y = 0; y < Y; y++) {
-            for (int x = 0; x < X; x++) {
-                if (paper[y][x] == 0 && !isVisited[y][x]) {
-                    result.add(bfs(x, y));
+        for (int y = 0; y < ROW; y++) {
+            for (int x = 0; x < COL; x++) {
+                if (map[y][x] == 0 && !isVisited[y][x]) {
                     count++;
+                    sizes.add(bfs(x,y));
                 }
             }
         }
 
-        Collections.sort(result);
         System.out.println(count);
-        System.out.println(result.stream().map(String::valueOf).collect(Collectors.joining(" ")));
+        sizes.stream().sorted().mapToInt(i -> i).forEach(i -> System.out.print(i + " "));
 
+        br.close();
+        bw.flush();
+        bw.close();
     }
 
-    private static int bfs(int x, int y) {
+    public static int bfs (int x, int y) {
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{x,y});
+        queue.offer(new int[] {x, y});
         isVisited[y][x] = true;
 
-        int area = 1;
+        int size = 1;
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
             int cx = cur[0];
@@ -82,16 +79,17 @@ class Main {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < X && ny < Y) {
-                    if (paper[ny][nx] == 0 && !isVisited[ny][nx]) {
-                        queue.offer(new int[]{nx, ny});
-                        isVisited[ny][nx] = true;
-                        area++;
-                    }
-                }
+                if (nx < 0 || ny < 0 || nx >= COL || ny >= ROW) continue;
+                if (map[ny][nx] != 0 || isVisited[ny][nx]) continue;
+
+                isVisited[ny][nx] = true;
+                queue.offer(new int[] {nx, ny});
+                size++;
             }
         }
-        return area;
+
+        return size;
     }
+
 }
 
