@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,8 +14,8 @@ public class Main {
 
     static List<List<Integer>> graph = new ArrayList<>();
     static boolean[] isVisited;
-    static StringBuilder bfs = new StringBuilder();
     static StringBuilder dfs = new StringBuilder();
+    static StringBuilder bfs = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -52,8 +50,8 @@ public class Main {
         isVisited = new boolean[N + 1];
         bfs(V);
 
-        System.out.println(dfs.toString());
-        System.out.println(bfs.toString());
+        bw.write(dfs.toString() + "\n");
+        bw.write(bfs.toString());
 
         br.close();
         bw.flush();
@@ -79,9 +77,8 @@ public class Main {
     }
 
     public static void dfs(int node) {
-        isVisited[node] = true;
         dfs.append(node).append(" ");
-
+        isVisited[node] = true;
         for (int next : graph.get(node)) {
             if (!isVisited[next]) {
                 isVisited[next] = true;
@@ -89,7 +86,6 @@ public class Main {
             }
         }
     }
-
 
 }
 
