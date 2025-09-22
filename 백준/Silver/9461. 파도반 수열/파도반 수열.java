@@ -10,21 +10,18 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int tc = Integer.parseInt(br.readLine());
+        int T = Integer.parseInt(br.readLine());
 
-        long[] dp = new long[101];
-        dp[1] = 1L;
-        dp[2] = 1L;
-        dp[3] = 1L;
-        dp[4] = 2L;
+        long[] dp = new long[100 + 1];
+        dp[1] = 1;
+        dp[2] = 1;
+        dp[3] = 1;
 
-        while (tc --> 0) {
+        while (T --> 0) {
             int N = Integer.parseInt(br.readLine());
-
-            for (int i = 5; i <= N; i++) {
+            for (int i = 4; i <= N; i++) {
                 dp[i] = dp[i - 3] + dp[i - 2];
             }
-
             System.out.println(dp[N]);
         }
 
@@ -32,5 +29,5 @@ public class Main {
         bw.flush();
         bw.close();
     }
-
 }
+
