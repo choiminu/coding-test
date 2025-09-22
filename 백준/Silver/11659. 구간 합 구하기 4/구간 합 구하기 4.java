@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -23,16 +22,11 @@ public class Main {
             dp[i] = A[i] + dp[i - 1];
         }
 
-        while (T --> 0) {
+        while (T-- > 0) {
             st = new StringTokenizer(br.readLine());
             int left = Integer.parseInt(st.nextToken());
             int right = Integer.parseInt(st.nextToken());
-
-            if (left == 1) {
-                System.out.println(dp[right]);
-            } else {
-                System.out.println(dp[right] - dp[left - 1]);
-            }
+            System.out.println(dp[right] - dp[left - 1]);
         }
 
         br.close();
