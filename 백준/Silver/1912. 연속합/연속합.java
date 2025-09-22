@@ -3,11 +3,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -15,24 +16,28 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         int[] A = new int[N];
-        StringTokenizer token = new StringTokenizer(br.readLine());
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(token.nextToken());
+            A[i] = Integer.parseInt(st.nextToken());
         }
 
         int[] dp = new int[N];
-        int max = A[0];
         dp[0] = A[0];
+        int max = dp[0];
 
         for (int i = 1; i < N; i++) {
-            dp[i] = Math.max(A[i] + dp[i - 1], A[i]);
-            max = Math.max(max,dp[i]);
+            dp[i] = Math.max(A[i], dp[i-1] + A[i]);
+            max = Math.max(max, dp[i]);
         }
 
-        bw.write(max + "");
+        System.out.println(max);
 
         br.close();
         bw.flush();
         bw.close();
     }
+
+
 }
+
