@@ -1,59 +1,80 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
     static int N;
-    static int[][] region;
+
+    static int[][] map;
     static boolean[][] isVisited;
+
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static Queue<int[]> queue = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         N = Integer.parseInt(br.readLine());
-        region = new int[N][N];
+        map = new int[N][N];
 
-        int maxHeight = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
-        for (int y = 0; y < N; y++) {
-            StringTokenizer token = new StringTokenizer(br.readLine());
-            for (int x = 0; x < N; x++) {
-                int h = Integer.parseInt(token.nextToken());
-                region[y][x] = h;
-                maxHeight = Math.max(maxHeight, h);
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+                if (min > map[i][j]) min = map[i][j];
+                if (max < map[i][j]) max = map[i][j];
             }
         }
 
         int maxArea = 0;
-
-        for (int h = 0; h <= maxHeight; h++) {
+        for (int i = 0; i <= max; i++) {
             isVisited = new boolean[N][N];
-            int area = 0;
+            int count = 0;
+            drowning(i);
 
             for (int y = 0; y < N; y++) {
                 for (int x = 0; x < N; x++) {
-                    if (!isVisited[y][x] && region[y][x] > h) {
-                        bfs(x, y, h);
-                        area++;
+                    if (map[y][x] != -1 && !isVisited[y][x]) {
+                        count++;
+                        bfs(x,y);
                     }
                 }
             }
-
-            maxArea = Math.max(maxArea, area);
+            maxArea = Math.max(maxArea, count);
         }
 
         System.out.println(maxArea);
+
+        br.close();
+        bw.flush();
+        bw.close();
     }
 
-    private static void bfs(int x, int y, int height) {
-        queue.offer(new int[]{x, y});
+
+    public static void drowning(int height) {
+        for (int y = 0; y < N; y++) {
+            for (int x = 0; x < N; x++) {
+                if (map[y][x] <= height) {
+                    map[y][x] = -1;
+                }
+            }
+        }
+    }
+
+    public static void bfs(int x, int y) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[] {x, y});
         isVisited[y][x] = true;
 
         while (!queue.isEmpty()) {
@@ -65,13 +86,17 @@ class Main {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < N && ny < N) {
-                    if (!isVisited[ny][nx] && region[ny][nx] > height) {
-                        isVisited[ny][nx] = true;
-                        queue.offer(new int[]{nx, ny});
-                    }
-                }
+                if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
+                if (map[ny][nx] == -1 || isVisited[ny][nx]) continue;
+
+                isVisited[ny][nx] = true;
+                queue.offer(new int[] {nx, ny});
             }
         }
     }
+
+
+
+
 }
+
