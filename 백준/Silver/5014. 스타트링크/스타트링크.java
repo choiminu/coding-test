@@ -5,47 +5,54 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
+
+    static int F, S, G, U, D;
+    static boolean[] isVisited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int F = Integer.parseInt(token.nextToken()); // 총 층 수
-        int S = Integer.parseInt(token.nextToken()); // 시작 층
-        int G = Integer.parseInt(token.nextToken()); // 목표 층
-        int U = Integer.parseInt(token.nextToken()); // 올라가는 층 수
-        int D = Integer.parseInt(token.nextToken()); // 내려가는 층 수
+        F = Integer.parseInt(st.nextToken()); // 총 층 수
+        S = Integer.parseInt(st.nextToken()); // 시작 층
+        G = Integer.parseInt(st.nextToken()); // 목표 층
+        U = Integer.parseInt(st.nextToken()); // 위로 이동
+        D = Integer.parseInt(st.nextToken()); // 아래로 이동
 
-        if (S == G) {
-            System.out.println(0);
-            return;
+        isVisited = new boolean[F + 1];
+
+        int result = bfs();
+
+        if (result == -1) {
+            System.out.println("use the stairs");
+        } else {
+            System.out.println(result);
         }
+    }
 
-        int[] count = new int[F + 1];
-        boolean[] visited = new boolean[F + 1];
-        Queue<Integer> queue = new LinkedList<>();
-
-        queue.offer(S);
-        visited[S] = true;
+    public static int bfs() {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{S, 0});
+        isVisited[S] = true;
 
         while (!queue.isEmpty()) {
-            int floor = queue.poll();
+            int[] cur = queue.poll();
+            int height = cur[0];
+            int cnt = cur[1];
 
-            for (int next : new int[]{floor + U, floor - D}) {
-                if (next >= 1 && next <= F && !visited[next]) {
-                    queue.offer(next);
-                    visited[next] = true;
-                    count[next] = count[floor] + 1;
+            if (height == G) {
+                return cnt;
+            }
 
-                    if (next == G) {
-                        System.out.println(count[next]);
-                        return;
-                    }
-                }
+            for (int next : new int[]{height + U, height - D}) {
+                if (next < 1 || next > F || isVisited[next]) continue;
+
+                isVisited[next] = true;
+                queue.offer(new int[]{next, cnt + 1});
             }
         }
 
-        System.out.println("use the stairs");
+        return -1;
     }
 }
