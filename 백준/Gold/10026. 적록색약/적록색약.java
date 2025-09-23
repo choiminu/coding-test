@@ -1,105 +1,73 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import javax.swing.plaf.IconUIResource;
 
-class Main {
+public class Main {
 
     static int N;
-
     static char[][] picture;
     static boolean[][] isVisited;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static Queue<int[]> queue = new LinkedList<>();
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         N = Integer.parseInt(br.readLine());
-
         picture = new char[N][N];
         isVisited = new boolean[N][N];
 
+        // 입력 읽기
         for (int i = 0; i < N; i++) {
-            char[] input = br.readLine().toCharArray();
-            for (int j = 0; j < N; j++) {
-                picture[i][j] = input[j];
-            }
+            picture[i] = br.readLine().toCharArray();
         }
 
-        int count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-
-                char color = picture[i][j];
-
-                if (picture[i][j] == 'R' && !isVisited[i][j]) {
-                    bfs(i, j, color);
-                    count++;
-                }
-
-                if (picture[i][j] == 'G' && !isVisited[i][j]) {
-                    bfs(i, j, color);
-                    count++;
-                }
-
-                if (picture[i][j] == 'B' && !isVisited[i][j]) {
-                    bfs(i, j, color);
-                    count++;
-                }
-            }
-        }
-
-        System.out.print(count + " ");
-
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (picture[i][j] == 'R' || picture[i][j] == 'G') {
-                    picture[i][j] = 'R';
-                }
-            }
-        }
-
-        isVisited = new boolean[N][N];
-
+        // 정상인의 구역 개수
         int cnt = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-
-                char color = picture[i][j];
-
-                if (picture[i][j] == 'R' && !isVisited[i][j]) {
-                    bfs(i, j, color);
+        for (int y = 0; y < N; y++) {
+            for (int x = 0; x < N; x++) {
+                if (!isVisited[y][x]) {
                     cnt++;
-                }
-
-
-                if (picture[i][j] == 'B' && !isVisited[i][j]) {
-                    bfs(i, j, color);
-                    cnt++;
+                    bfs(x, y, false); // 정상인 기준 탐색
                 }
             }
         }
-
         System.out.println(cnt);
 
+        // 적록색약의 구역 개수
+        isVisited = new boolean[N][N]; // 방문 배열 초기화
+        cnt = 0;
+        for (int y = 0; y < N; y++) {
+            for (int x = 0; x < N; x++) {
+                if (!isVisited[y][x]) {
+                    cnt++;
+                    bfs(x, y, true); // 색약 기준 탐색
+                }
+            }
+        }
+        System.out.println(cnt);
 
-
-
+        br.close();
+        bw.flush();
+        bw.close();
     }
 
-    private static void bfs(int x, int y, char color) {
-
+    /**
+     * BFS로 연결된 같은 구역 모두 방문 처리
+     * @param x 시작 x좌표 (열)
+     * @param y 시작 y좌표 (행)
+     * @param isBlind 적록색약 모드(true면 R/G 동일하게 처리)
+     */
+    public static void bfs(int x, int y, boolean isBlind) {
+        Queue<int[]> queue = new LinkedList<>();
         queue.offer(new int[]{x, y});
-        isVisited[x][y] = true;
+        isVisited[y][x] = true;
+
+        char startColor = picture[y][x]; // 시작 칸의 색을 기준으로 연결 판단
 
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
@@ -110,17 +78,37 @@ class Main {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < N && ny < N) {
-
-                    if (picture[nx][ny] == color && !isVisited[nx][ny]) {
-                        queue.offer(new int[]{nx, ny});
-                        isVisited[nx][ny] = true;
-                    }
-
+                // 범위 체크
+                if (nx < 0 || ny < 0 || nx >= N || ny >= N) {
+                    continue;
                 }
+
+                // 이미 방문했으면 스킵
+                if (isVisited[ny][nx]) {
+                    continue;
+                }
+
+                // 연결 여부 판단
+                if (!isBlind) {
+                    // 정상인의 경우: 색이 정확히 같아야 연결
+                    if (picture[ny][nx] != startColor) {
+                        continue;
+                    }
+                } else {
+                    // 적록색약인 경우:
+                    // 시작색이 'B'이면 인접도 'B'여야 함
+                    if (startColor == 'B') {
+                        if (picture[ny][nx] != 'B') continue;
+                    } else {
+                        // 시작색이 R 또는 G이면 인접은 'B'가 아니면 연결(R/G 모두 허용)
+                        if (picture[ny][nx] == 'B') continue;
+                    }
+                }
+
+                // 연결 가능한 칸이면 방문 표시하고 큐에 추가
+                isVisited[ny][nx] = true;
+                queue.offer(new int[]{nx, ny});
             }
         }
     }
-
-
 }
