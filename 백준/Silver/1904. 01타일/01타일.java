@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
 
@@ -15,6 +13,17 @@ public class Main {
         int[] dp = new int[N + 1];
         dp[1] = 1;
         if (N >= 2) dp[2] = 2;
+
+        /**
+         * N=1 (1)
+         * N=2 (11, 00)
+         * N=3 (111, 100, 001)
+         * N=4 (1111, 0000, 1001, 1100, 0011)
+         * 길이가 i인 타일 수열의 수 = {
+         *  길이 i-1 수열 뒤에 1 붙이기
+         *  길이가 i-2 수열 뒤에 00 붙이기
+         *  }
+         */
 
         for (int i = 3; i <= N; i++) {
             dp[i] = (dp[i - 2] + dp[i - 1]) % MOD;
