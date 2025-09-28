@@ -1,15 +1,11 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
-    static int row;
-    static int col;
-
+    static int ROW, COL;
     static int[][] map;
     static boolean[][][] isVisited;
 
@@ -18,63 +14,65 @@ class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer token = new StringTokenizer(br.readLine());
 
-        row = Integer.parseInt(token.nextToken());
-        col = Integer.parseInt(token.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        ROW = Integer.parseInt(st.nextToken());
+        COL = Integer.parseInt(st.nextToken());
 
-        map = new int[row][col];
-        isVisited = new boolean[row][col][2];
+        map = new int[ROW][COL];
+        isVisited = new boolean[ROW][COL][2];
 
-        for (int y = 0; y < row; y++) {
-            char[] chars = br.readLine().toCharArray();
-            for (int x = 0; x < col; x++) {
-                map[y][x] = chars[x] - '0';
+        for (int y = 0; y < ROW; y++) {
+            char[] temp = br.readLine().toCharArray();
+            for (int x = 0; x < COL; x++) {
+                map[y][x] = temp[x] - '0';
             }
         }
 
         int result = bfs();
 
         System.out.println(result);
+
+        br.close();
     }
 
     public static int bfs() {
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{0, 0, 0, 1}); // x, y, broken, distance
+        queue.offer(new int[]{0, 0, 1, 0});
         isVisited[0][0][0] = true;
 
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
             int cx = cur[0];
             int cy = cur[1];
-            int broken = cur[2];
-            int dis = cur[3];
+            int time = cur[2];
+            int broken = cur[3];
 
-            if (cx == col - 1 && cy == row - 1) {
-                return dis;
+            if (cx == COL - 1 && cy == ROW - 1) {
+                return time;
             }
 
             for (int d = 0; d < 4; d++) {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < col && ny < row) {
+                if (nx < 0 || ny < 0 || nx >= COL || ny >= ROW) continue;
 
-                    if (map[ny][nx] == 0 && !isVisited[ny][nx][broken]) {
-                        isVisited[ny][nx][broken] = true;
-                        queue.offer(new int[]{nx, ny, broken, dis + 1});
-                    }
+                if (isVisited[ny][nx][broken]) continue;
 
-                    if (map[ny][nx] == 1 && broken == 0 && !isVisited[ny][nx][1]) {
+                if (map[ny][nx] == 1) {
+                    if (broken == 0) {
                         isVisited[ny][nx][1] = true;
-                        queue.offer(new int[]{nx, ny, 1, dis + 1});
+                        queue.offer(new int[]{nx, ny, time + 1, 1});
                     }
-
+                    continue;
                 }
+
+                isVisited[ny][nx][broken] = true;
+                queue.offer(new int[]{nx, ny, time + 1, broken});
             }
         }
+
         return -1;
     }
-
 }
-
