@@ -1,98 +1,125 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
-    static int n,m;
+    static int X, Y;
+
     static char[][] map;
+    static boolean[][] isVisited;
     static int[][] fireTime;
-    static int[][] userTime;
+
+    static Queue<int[]> player = new LinkedList<>();
+    static Queue<int[]> fire = new LinkedList<>();
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    static Queue<int[]> fireQueue = new LinkedList<>();
-    static Queue<int[]> userQueue = new LinkedList<>();
-
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        n = Integer.parseInt(token.nextToken());
-        m = Integer.parseInt(token.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        Y = Integer.parseInt(st.nextToken());
+        X = Integer.parseInt(st.nextToken());
 
-        map = new char[n][m];
-        fireTime = new int[n][m];
-        userTime = new int[n][m];
+        map = new char[Y][X];
+        isVisited = new boolean[Y][X];
+        fireTime = new int[Y][X];
 
-        for (int i = 0; i < n; i++) {
-            char[] input = br.readLine().toCharArray();
-            for (int j = 0; j < m; j++) {
-                map[i][j] = input[j];
-                fireTime[i][j] = -1;
-                userTime[i][j] = -1;
+        for (int y = 0; y < Y; y++) {
+            char[] temp = br.readLine().toCharArray();
+            for (int x = 0; x < X; x++) {
+                map[y][x] = temp[x];
+                fireTime[y][x] = -1;
 
-                if (input[j] == 'J') {
-                    userQueue.offer(new int[]{i,j});
-                    userTime[i][j] = 0;
+                if (temp[x] == 'F') {
+                    fire.offer(new int[]{x, y, 0});
+                    fireTime[y][x] = 0;
                 }
 
-                if (input[j] == 'F') {
-                    fireQueue.offer(new int[]{i,j});
-                    fireTime[i][j] = 0;
+                if (temp[x] == 'J') {
+                    player.offer(new int[]{x, y, 0});
                 }
             }
         }
 
+        bfsFire();
+        int result = bfsPlayer();
 
-        while (!fireQueue.isEmpty()) {
-            int[] cur = fireQueue.poll();
-            int x = cur[0];
-            int y = cur[1];
-
-            for (int d = 0; d < 4; d++) {
-                int nx = x + dx[d];
-                int ny = y + dy[d];
-
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
-                if (map[nx][ny] == '#' || fireTime[nx][ny] != -1) continue;
-
-                fireTime[nx][ny] = fireTime[x][y] + 1;
-                fireQueue.offer(new int[]{nx, ny});
-            }
+        if (result == -1) {
+            bw.write("IMPOSSIBLE\n");
+        } else {
+            bw.write(result+"");
         }
 
-
-        while (!userQueue.isEmpty()) {
-            int[] cur = userQueue.poll();
-            int x = cur[0];
-            int y = cur[1];
-
-            if (x == 0 || y == 0 || x == n - 1 || y == m - 1) {
-                System.out.println(userTime[x][y] + 1);
-                return;
-            }
-
-            for (int d = 0; d < 4; d++) {
-                int nx = x + dx[d];
-                int ny = y + dy[d];
-
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
-                if (map[nx][ny] == '#' || userTime[nx][ny] != -1) continue;
-                if (fireTime[nx][ny] != -1 && fireTime[nx][ny] - 1 <= userTime[x][y]) continue;
-
-                userTime[nx][ny] = userTime[x][y] + 1;
-                userQueue.offer(new int[]{nx, ny});
-            }
-        }
-
-        System.out.println("IMPOSSIBLE");
-
+        br.close();
+        bw.flush();
+        bw.close();
     }
+
+    public static void bfsFire() {
+        while (!fire.isEmpty()) {
+            int[] cur = fire.poll();
+            int cx = cur[0];
+            int cy = cur[1];
+            int time = cur[2];
+
+            for (int d = 0; d < 4; d++) {
+                int nx = cx + dx[d];
+                int ny = cy + dy[d];
+
+                if (nx < 0 || ny < 0 || nx >= X || ny >= Y) {
+                    continue;
+                }
+
+                if (map[ny][nx] == '#' || fireTime[ny][nx] != -1) {
+                    continue;
+                }
+
+                fireTime[ny][nx] = time + 1;
+                fire.offer(new int[]{nx, ny, time + 1});
+            }
+        }
+    }
+
+    public static int bfsPlayer() {
+        while (!player.isEmpty()) {
+            int[] cur = player.poll();
+            int cx = cur[0];
+            int cy = cur[1];
+            int time = cur[2];
+            isVisited[cy][cx] = true;
+
+            if (cx == 0 || cy == 0 || cx + 1 == X || cy + 1 == Y) {
+                return time + 1;
+            }
+
+            for (int d = 0; d < 4; d++) {
+                int nx = cx + dx[d];
+                int ny = cy + dy[d];
+
+                if (nx < 0 || ny < 0 || nx >= X || ny >= Y) {
+                    continue;
+                }
+
+                if (map[ny][nx] == '#' || isVisited[ny][nx]) {
+                    continue;
+                }
+
+                if (fireTime[ny][nx] != -1 && fireTime[ny][nx] <= time + 1) {
+                    continue;
+                }
+
+                isVisited[ny][nx] = true;
+                player.offer(new int[]{nx, ny, time + 1});
+            }
+        }
+
+        return -1;
+    }
+
 }
