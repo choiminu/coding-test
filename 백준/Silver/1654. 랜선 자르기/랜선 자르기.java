@@ -1,53 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        int N = Integer.parseInt(token.nextToken());
-        int target = Integer.parseInt(token.nextToken());
+        long min = 1;
+        long max = Integer.MIN_VALUE;
 
-        long max = 0;
-        long min = 0;
-
-        int[] lan = new int[N];
+        long[] A = new long[N];
         for (int i = 0; i < N; i++) {
-            lan[i] = Integer.parseInt(br.readLine());
-            if (lan[i] > max) {
-                max = lan[i];
+            A[i] = Integer.parseInt(br.readLine());
+            if (A[i] > max) {
+                max = A[i];
             }
         }
 
-        max++;
-
-        while (min < max) {
+        long result= 0;
+        while (min <= max) {
             long mid = (min + max) / 2;
+            long count = 0;
 
-            long cnt = 0;
-
-            for (int i = 0; i < N; i++) {
-                cnt += lan[i] / mid;
+            // 중간 길이로 랜선을 자른다.
+            for (long i : A) {
+                count += i / mid;
             }
 
-
-            if (cnt < target) {
-                max = mid;
-            } else {
+            // 자른 랜선의 길이가 M보다 큰 경우 더 길게 자를 수 있는지 확인
+            if (count >= M) {
+                result = mid;
                 min = mid + 1;
+            } else {
+                max = mid - 1;
             }
         }
 
-        System.out.println(min - 1);
+        System.out.println(result);
 
+        br.close();
     }
 
-}
 
+
+}
