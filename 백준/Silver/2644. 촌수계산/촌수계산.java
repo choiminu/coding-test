@@ -1,71 +1,69 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-
-    static int T,K;
-
-    static int result = -1;
-
     static List<List<Integer>> graph = new ArrayList<>();
     static boolean[] isVisited;
 
+    static int start;
+    static int end;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        start = Integer.parseInt(st.nextToken());
+        end = Integer.parseInt(st.nextToken());
+        isVisited = new boolean[N + 1];
+
+        int M = Integer.parseInt(br.readLine());
         for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
         }
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
-        T = Integer.parseInt(token.nextToken());
-        K = Integer.parseInt(token.nextToken());
-
-        int M = Integer.parseInt(br.readLine());
         for (int i = 0; i < M; i++) {
-            token = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
 
-            int x = Integer.parseInt(token.nextToken());
-            int y = Integer.parseInt(token.nextToken());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
 
-            graph.get(x).add(y);
-            graph.get(y).add(x);
+            graph.get(u).add(v);
+            graph.get(v).add(u);
         }
 
-        isVisited = new boolean[N + 1];
-        dfs(T, 0);
-
-        System.out.println(result);
-
+        System.out.println(bfs());
+        
         br.close();
-        bw.flush();
-        bw.close();
     }
 
-    public static void dfs(int node, int depth) {
-        isVisited[node] = true;
+    public static int bfs() {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[] {start, 0});
+        isVisited[start] = true;
 
-        for (int i = 0; i < graph.get(node).size(); i++) {
-            int nextNode = graph.get(node).get(i);
-            if (!isVisited[nextNode]) {
-                if (nextNode == K) {
-                    result = depth + 1;
-                    break;
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int cx = cur[0];
+            int dist = cur[1];
+
+            if (cx == end) {
+                return dist;
+            }
+
+            for (int next : graph.get(cx)) {
+                if (!isVisited[next]) {
+                    isVisited[next] = true;
+                    queue.offer(new int[] {next, dist + 1});
                 }
-                dfs(nextNode, depth + 1);
             }
         }
 
+        return -1;
     }
 }
