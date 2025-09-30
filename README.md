@@ -27,4 +27,8 @@
 |  |
 | ------- |
 | [1168-duplicate-zeros](https://github.com/choiminu/coding-test/tree/master/1168-duplicate-zeros) |
+## Database
+|  |
+| ------- |
+| [0584-find-customer-referee](https://github.com/choiminu/coding-test/tree/master/0584-find-customer-referee) |
 <!---LeetCode Topics End-->
