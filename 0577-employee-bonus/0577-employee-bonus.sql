@@ -2,8 +2,8 @@ select
     name,
     bonus
 from
-    Employee a
+    Employee E
 left join
-    Bonus b on a.empId = b.empId
+    Bonus B on E.empId = B.empId
 where
-    bonus is null or bonus < 1000
+    bonus is null || bonus < 1000
