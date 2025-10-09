@@ -2,6 +2,6 @@ select
     unique_id,
     name
 from
-    employees e
+    Employees E
 left join
-    EmployeeUNI u on e.id = u.id
+    EmployeeUNI U on E.id = U.id
