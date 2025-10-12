@@ -1,78 +1,71 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N;
-    static int M;
-
-    static boolean[] visited;
-
     static List<List<Integer>> graph = new ArrayList<>();
+    static boolean[] isVisited;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(token.nextToken());
-        M = Integer.parseInt(token.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        visited = new boolean[N + 1];
+        // 정점의 개수
+        int N = Integer.parseInt(st.nextToken());
+
+        // 간선의 개수
+        int M = Integer.parseInt(st.nextToken());
+
+        // 그래프 초기화
         for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
         }
 
-        for (int i = 0; i < M; i++) {
-            token = new StringTokenizer(br.readLine());
+        isVisited = new boolean[N + 1];
 
-            int u = Integer.parseInt(token.nextToken());
-            int v = Integer.parseInt(token.nextToken());
+        // 그래프 초기화
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
 
             graph.get(u).add(v);
             graph.get(v).add(u);
         }
 
-        int result = 0;
+        // 연결 요소의 개수
+        int count = 0;
 
+        // 그래프 탐색
         for (int i = 1; i <= N; i++) {
-            if (!visited[i]) {
+            if (!isVisited[i]) {
                 dfs(i);
-                result++;
+                count++;
             }
         }
 
-        System.out.println(result);
+        System.out.println(count);
 
         br.close();
         bw.flush();
-        bw.close();
+        br.close();
     }
 
     public static void dfs(int node) {
-        Queue<Integer> queue = new LinkedList<>();
-        queue.offer(node);
-        visited[node] = true;
-
-        while (!queue.isEmpty()) {
-            Integer currentNode = queue.poll();
-
-            for (int i = 0; i < graph.get(currentNode).size(); i++) {
-                Integer nextNode = graph.get(currentNode).get(i);
-                if (!visited[nextNode]) {
-                    visited[nextNode] = true;
-                    queue.offer(nextNode);
-                }
+        isVisited[node] = true;
+        for (int next : graph.get(node)) {
+            if (!isVisited[next]) {
+                isVisited[next] = true;
+                dfs(next);
             }
         }
     }
-
 }
