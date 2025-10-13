@@ -1,27 +1,20 @@
 class Solution {
     
-    static int result = 0;
+    static int answer;
     
     public int solution(int[] numbers, int target) {
-        int answer = 0;
-        
-        dps(numbers, 0, 0, target);
-        
-        answer = result;
-        
+        dfs(numbers, 0, 0, target);
         return answer;
     }
     
-    public void dps(int[] A, int sum, int depth, int target) {
-        if (depth == A.length) {
+    public void dfs(int[] arr, int depth, int sum, int target) {
+        if (depth == arr.length) {
             if (sum == target) {
-                result++;
+                answer++;
             }
             return;
         }
-        
-        dps(A, sum + A[depth] * -1, depth + 1, target);
-        dps(A, sum + A[depth] * 1, depth + 1, target);
-        
-    }
+        dfs(arr, depth + 1, sum  + arr[depth], target);
+        dfs(arr, depth + 1, sum  - arr[depth], target);
+    } 
 }
