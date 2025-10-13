@@ -1,52 +1,48 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 
-    static int row;
-    static int col;
+    static int C, L;
 
     static int[][] map;
-    static boolean[][] isVisited;
 
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer token = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        L = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
 
-        row = Integer.parseInt(token.nextToken());
-        col = Integer.parseInt(token.nextToken());
+        map = new int[L][C];
 
-        map = new int[row][col];
-
-        for (int y = 0; y < row; y++) {
-            token = new StringTokenizer(br.readLine());
-            for (int x = 0; x < col; x++) {
-                map[y][x] = Integer.parseInt(token.nextToken());
+        for (int i = 0; i < L; i++) {
+            String[] input = br.readLine().split(" ");
+            for (int j = 0; j < C; j++) {
+                map[i][j] = Integer.parseInt(input[j]);
             }
         }
 
         int year = 0;
+
         while (true) {
             int count = countIcebergs();
 
-            if (count >= 2) {
-                System.out.println(year);
+            if (count == 0) {
+                year = 0;
                 break;
             }
 
-            if (count == 0) {
-                System.out.println(0);
+            if (count >= 2) {
                 break;
             }
 
@@ -54,57 +50,62 @@ class Main {
             year++;
         }
 
+        System.out.println(year);
+
         br.close();
         bw.flush();
-        bw.close();
-
+        br.close();
     }
 
-    private static void melt() {
-        int[][] meltAmount = new int[row][col];
+    public static void melt() {
+        int[][] copyMap = new int[L][C];
 
-        for (int y = 0; y < row; y++) {
-            for (int x = 0; x < col; x++) {
+        for (int i = 0; i < L; i++) {
+            for (int j = 0; j < C; j++) {
+                copyMap[i][j] = map[i][j];
+            }
+        }
+
+        for (int y = 0; y < L; y++) {
+            for (int x = 0; x < C; x++) {
                 if (map[y][x] > 0) {
                     int sea = 0;
-                    for (int d = 0; d < 4; d++) {
-                        int nx = x + dx[d];
-                        int ny = y + dy[d];
 
-                        if (nx >= 0 && ny >= 0 && nx < col && ny < row) {
-                            if (map[ny][nx] == 0) sea++;
-                        }
+                    for (int d = 0; d < 4; d++) {
+                        int ny = y + dy[d];
+                        int nx = x + dx[d];
+
+                        if (ny < 0 || nx < 0 || ny >= L || nx >= C) continue;
+                        if (map[ny][nx] == 0) sea++;
                     }
-                    meltAmount[y][x] = sea;
+
+                    copyMap[y][x] = Math.max(0, map[y][x] - sea);
                 }
             }
         }
 
-        for (int y = 0; y < row; y++) {
-            for (int x = 0; x < col; x++) {
-                map[y][x] = Math.max(0, map[y][x] - meltAmount[y][x]);
-            }
-        }
+        map = copyMap;
     }
 
-
     public static int countIcebergs() {
-        isVisited = new boolean[row][col];
+        boolean[][] visited = new boolean[L][C];
         int count = 0;
-        for (int y = 0; y < row; y++) {
-            for (int x = 0; x < col; x++) {
-                if (map[y][x] > 0 && !isVisited[y][x]) {
-                    bfs(x,y);
+
+        for (int y = 0; y < L; y++) {
+            for (int x = 0; x < C; x++) {
+                if (map[y][x] > 0 && !visited[y][x]) {
+                    bfs(x, y, visited);
                     count++;
                 }
             }
         }
+
         return count;
     }
 
-    private static void bfs(int x, int y) {
+    public static void bfs(int x, int y, boolean[][] isVisited) {
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{x,y});
+        queue.offer(new int[]{x, y});
         isVisited[y][x] = true;
 
         while (!queue.isEmpty()) {
@@ -116,14 +117,17 @@ class Main {
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < col && ny < row) {
-                    if (map[ny][nx] > 0 && !isVisited[ny][nx]) {
-                        queue.offer(new int[]{nx, ny});
-                        isVisited[ny][nx] = true;
-                    }
+                if (nx < 0 || ny < 0 || nx >= C || ny >= L) {
+                    continue;
                 }
+                if (isVisited[ny][nx] || map[ny][nx] == 0) {
+                    continue;
+                }
+
+                isVisited[ny][nx] = true;
+                queue.offer(new int[]{nx, ny});
             }
         }
     }
-}
 
+}
