@@ -1,15 +1,5 @@
 class Solution {
     public long solution(long n) {
-        long answer = 0;
-        
-        double sqrt = Math.sqrt(n);
-        
-        if (sqrt % 1 == 0) {
-            answer = (long) Math.pow(sqrt + 1, 2);
-        } else {
-            answer = -1;
-        }
-        
-        return answer;
+        return (long)Math.sqrt(n) * (long)Math.sqrt(n) == n ? (long)Math.pow((long)Math.sqrt(n) + 1, 2) : -1L;
     }
 }
