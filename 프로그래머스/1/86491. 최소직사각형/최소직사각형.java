@@ -1,20 +1,12 @@
-import java.util.Arrays;
-
 class Solution {
     public int solution(int[][] sizes) {
-          int answer = 0;
-
-            int max = 0;
-            int min = 0;
-            for (int i = 0; i < sizes.length; i++) {
-                int w = Math.max(sizes[i][0], sizes[i][1]);
-                int h = Math.min(sizes[i][0], sizes[i][1]);
-                max = Math.max(max, w);
-                min = Math.max(min, h);
-            }
-
-            answer = max * min;
-
-            return answer;
+        int w = Integer.MIN_VALUE;
+        int h = Integer.MIN_VALUE;
+        
+        for (int[] size : sizes) {
+            w = Math.max(w, Math.max(size[0], size[1]));
+            h = Math.max(h, Math.min(size[0], size[1]));
+        }
+        return w * h;
     }
 }
