@@ -1,16 +1,15 @@
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 class Solution {
     public String solution(int[] food) {
-        String answer = "";
+        StringBuilder collect = new StringBuilder(IntStream.range(1, food.length)
+                .mapToObj(i -> String.valueOf(i).repeat(food[i] / 2))
+                .collect(Collectors.joining()));
         
-        StringBuilder player = new StringBuilder();
-
-        for (int i = 1; i < food.length; i++) {
-            int amount = food[i] / 2;
-            player.append(String.valueOf(i).repeat(amount));
-        }
-
-        answer = player.toString() + "0" + player.reverse().toString();
+        String left = collect.toString();
+        String right = collect.reverse().toString();
         
-        return answer;
+        return left + "0" + right;
     }
 }
