@@ -10,8 +10,7 @@ select
 from
     t
 where
-    total = (
-        select max(total)
-        from t
-        where total <= 1000
-    )
+    total <= 1000
+order by
+    total desc
+limit 1
